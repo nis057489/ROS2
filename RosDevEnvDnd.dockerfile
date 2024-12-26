@@ -11,9 +11,17 @@ ENV CXX=clang++
 ENV LANG=en_US.UTF-8
 ENV QT_QPA_PLATFORM=xcb
 
-# Install basic tools, Clang, and zsh
+# Install basic tools, Clang, zsh, and prerequisites
 RUN apt-get update && apt-get install -y \
-    zsh software-properties-common lsb-release gnupg wget clang && \
+    zsh software-properties-common lsb-release gnupg wget clang systemd dbus && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Docker
+RUN apt-get update && apt-get install -y \
+    apt-transport-https ca-certificates curl && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Neovim
@@ -60,6 +68,11 @@ RUN apt-get update && \
 ENV PATH="$PATH:/root/.local/bin"
 ENV PIPX_BIN_DIR="/usr/local/bin"
 
+# Set up systemd as the default init system
+STOPSIGNAL SIGRTMIN+3
+CMD ["/lib/systemd/systemd"]
+
+# Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
