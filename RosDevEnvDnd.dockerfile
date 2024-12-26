@@ -45,7 +45,7 @@ RUN curl -sSL https://packages.osrfoundation.org/gazebo.gpg -o /usr/share/keyrin
 
 # Install additional tools
 RUN apt-get update && apt-get install -y \
-    pipx openscad meshlab && \
+    pipx openscad meshlab xsel && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install VS Code (Code - OSS)
