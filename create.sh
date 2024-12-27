@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 distrobox create \
   --image nbembedded/ros2_devenv:main \
   --name ros2_devenv

@@ -2,7 +2,8 @@
 FROM ubuntu:noble
 
 # ROS and Gazebo versions
-ENV ROS_VERSION=jazzy
+ARG ROS_VERSION=jazzy
+ENV ROS_VERSION=${ROS_VERSION}
 ENV GZ_VERSION=harmonic
 
 # Set environment variables
